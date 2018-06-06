@@ -1,6 +1,6 @@
 import { createVectorVisualisation, setVectorVisualisation, truncateV } from './Utils.js';
 
-export default class StageArrow {
+export default class AiAgent {
   constructor(stage, x, y) {
     this.desiredVelocity = new Victor(0, 0); // per second
     this.velocity = new Victor(100, 0); // per second
