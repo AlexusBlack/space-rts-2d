@@ -3,6 +3,7 @@ import { getRandomInt } from './Utils.js';
 
 const agentsNumber = 1;
 const stage = new createjs.Stage('demoCanvas');
+const gui = new dat.GUI();
 const targetPosition = new Victor(getRandomInt(0, 640), getRandomInt(0, 480));
 const target = new createjs.Shape();
 target.x = targetPosition.x; target.y = targetPosition.y;
@@ -12,6 +13,13 @@ stage.addChild(target);
 const agents = [];
 for(let i = 0; i < agentsNumber; i++) {
   const agent = new AiAgent(stage, getRandomInt(0, 640), getRandomInt(0, 480));
+  const guiFolder = gui.addFolder(`Agent #${i}`);
+  guiFolder.add(agent, 'mass', 0.1, 10);
+  guiFolder.add(agent, 'maxVelocity', 1, 100);
+  guiFolder.add(agent, 'maxForce', 0.1, 10);
+  guiFolder.add(agent, 'maxSpeed', 1, 100);
+  guiFolder.add(agent, 'reset');
+  guiFolder.add(agent, 'jump');
   agent.target = new Victor(target.x, target.y);
   agents.push(agent);
 }

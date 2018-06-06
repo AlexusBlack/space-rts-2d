@@ -1,6 +1,7 @@
 import { 
   createVectorVisualisation, 
   setVectorVisualisation, 
+  getRandomInt,
   truncateV,
   toV
 } from './Utils.js';
@@ -63,6 +64,11 @@ export default class AiAgent {
     this.x = this._startPosition.x;
     this.y = this._startPosition.y;
     this.velocity = new Victor(100, 0);
+  }
+
+  jump() {
+    this._startPosition = new Victor(getRandomInt(0, 640), getRandomInt(0, 480));
+    this.reset();
   }
 
   _visualize(position, velocity, desiredVelocity, steering) {
