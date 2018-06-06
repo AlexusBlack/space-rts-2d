@@ -22,6 +22,7 @@ export default class AiAgent {
     this._startPosition = new Victor(x, y);
     this._desiredVelocity = new Victor(0, 0); // per second
     this._velocity = new Victor(100, 0); // per second
+    this._steering = null;
     //#endregion
 
     this._object = new createjs.Shape();
@@ -45,19 +46,17 @@ export default class AiAgent {
   update(timestamp) {
     const fraction = this._getFraction(timestamp);
     
-    this._desiredVelocity = this.target.clone().subtract(this.position).normalize().multiply(toV(this.maxVelocity));
-    this.steering = this._desiredVelocity.clone().subtract(this._velocity);
-    this.steering = truncateV(this.steering, this.maxForce);
-    this.steering.divide(new Victor(this.mass, this.mass));
+    const seekSteering = this._seek(this.target);
+    this._steering = seekSteering;
 
-    this._velocity = this._velocity.clone().add(this.steering);
+    this._velocity = this._velocity.clone().add(this._steering);
     this._velocity = truncateV(this._velocity, this.maxSpeed);
     
     this.x += this._velocity.x * fraction;
     this.y += this._velocity.y * fraction;
     this._object.rotation = this._velocity.angleDeg();
     
-    this._visualize(this.position, this._velocity, this._desiredVelocity, this.steering);
+    this._visualize(this.position, this._velocity, this._desiredVelocity, this._steering);
   }
 
   reset() {
@@ -71,6 +70,19 @@ export default class AiAgent {
     this.reset();
   }
 
+  //#region Steering behaviours
+  _seek(target) {
+    const desiredVelocity = target.clone().subtract(this.position).normalize().multiply(toV(this.maxVelocity));
+    let steering = desiredVelocity.clone().subtract(this._velocity);
+    steering = truncateV(steering, this.maxForce);
+    steering.divide(new Victor(this.mass, this.mass));
+
+    this._desiredVelocity = desiredVelocity;
+
+    return steering;
+  }
+  //#endregion
+
   _createVisualization(stage) {
     this._currentVelocityVector = createVectorVisualisation('#00AA00', 100, 2);
     stage.addChild(this._currentVelocityVector);
@@ -83,7 +95,7 @@ export default class AiAgent {
   _visualize(position, velocity, desiredVelocity, steering) {
     setVectorVisualisation(this._currentVelocityVector, position, position.clone().add(velocity), velocity.length());
     setVectorVisualisation(this._desiredVelocityVector, position, position.clone().add(desiredVelocity), desiredVelocity.length());
-    setVectorVisualisation(this._steeringVector, position.clone().add(velocity), position.clone().add(desiredVelocity), this.steering.length() * 100);
+    setVectorVisualisation(this._steeringVector, position.clone().add(velocity), position.clone().add(desiredVelocity), this._steering.length() * 100);
   }
   
   _getFraction(timestamp) {
