@@ -3,7 +3,7 @@ import { getRandomInt } from './Utils.js';
 
 const agentsNumber = 1;
 const stage = new createjs.Stage('demoCanvas');
-const targetPosition = new Victor(400, 400);
+const targetPosition = new Victor(getRandomInt(0, 640), getRandomInt(0, 480));
 const target = new createjs.Shape();
 target.x = targetPosition.x; target.y = targetPosition.y;
 target.graphics.beginFill('black').drawCircle(0,0,30);
