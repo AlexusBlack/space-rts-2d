@@ -10,8 +10,8 @@ export default class AiAgent {
   constructor(stage, x, y) {
     //#region Public Fields
     this.maxVelocity = 50; // per second
-    this.maxForce = 0.3;
-    this.maxSpeed = 100;
+    this.maxForce = 1;
+    this.maxSpeed = 50;
     this.mass = 1;
     this.target = null;
     //#endregion
@@ -21,7 +21,7 @@ export default class AiAgent {
     this._lastTimestamp = null;
     this._startPosition = new Victor(x, y);
     this._desiredVelocity = new Victor(0, 0); // per second
-    this._velocity = new Victor(100, 0); // per second
+    this._velocity = new Victor(50, 0); // per second
     this._steering = null;
     //#endregion
 
@@ -95,7 +95,7 @@ export default class AiAgent {
   _visualize(position, velocity, desiredVelocity, steering) {
     setVectorVisualisation(this._currentVelocityVector, position, position.clone().add(velocity), velocity.length());
     setVectorVisualisation(this._desiredVelocityVector, position, position.clone().add(desiredVelocity), desiredVelocity.length());
-    setVectorVisualisation(this._steeringVector, position.clone().add(velocity), position.clone().add(desiredVelocity), this._steering.length() * 100);
+    setVectorVisualisation(this._steeringVector, position.clone().add(velocity), position.clone().add(desiredVelocity), this._steering.length() * 50);
   }
   
   _getFraction(timestamp) {
