@@ -4,6 +4,9 @@ import { getRandomInt } from './Utils.js';
 const agentsNumber = 2;
 const stage = new createjs.Stage('demoCanvas');
 const gui = new dat.GUI();
+const stats = new Stats();
+stats.showPanel(0);
+document.body.appendChild(stats.dom);
 const targetPosition = new Victor(getRandomInt(0, 640), getRandomInt(0, 480));
 const target = new createjs.Shape();
 target.x = targetPosition.x; target.y = targetPosition.y;
@@ -19,6 +22,7 @@ for(let i = 0; i < agentsNumber; i++) {
 }
 
 function loop(timestamp) {
+  stats.begin();
   for(let agent of agents) {
     agent.update(timestamp);
 
@@ -27,6 +31,7 @@ function loop(timestamp) {
     if(agent.position.distance(targetPosition) < 2*2) agent.reset();
   }
   stage.update();
+  stats.end();
   requestAnimationFrame(loop);
 }
 
