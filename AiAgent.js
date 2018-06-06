@@ -1,4 +1,9 @@
-import { createVectorVisualisation, setVectorVisualisation, truncateV } from './Utils.js';
+import { 
+  createVectorVisualisation, 
+  setVectorVisualisation, 
+  truncateV,
+  toV
+} from './Utils.js';
 
 export default class AiAgent {
   constructor(stage, x, y) {
@@ -38,32 +43,32 @@ export default class AiAgent {
   
   update(timestamp) {
     const fraction = this._getFraction(timestamp);
-    //this._object.rotation += 1;
     
-    const maxVelocity = new Victor(this.maxVelocity, this.maxVelocity);
-    const maxForce = new Victor(this.maxForce, this.maxForce);
-    this.desiredVelocity = this.target.clone().subtract(this.position).normalize().multiply(maxVelocity);
+    this.desiredVelocity = this.target.clone().subtract(this.position).normalize().multiply(toV(this.maxVelocity));
     this.steering = this.desiredVelocity.clone().subtract(this.velocity);
     this.steering = truncateV(this.steering, this.maxForce);
     this.steering.divide(new Victor(this.mass, this.mass));
 
     this.velocity = this.velocity.clone().add(this.steering);
     this.velocity = truncateV(this.velocity, this.maxSpeed);
-    //this.velocity = this.desiredVelocity;
     
     this.x += this.velocity.x * fraction;
     this.y += this.velocity.y * fraction;
     this._object.rotation = this.velocity.angleDeg();
     
-    setVectorVisualisation(this._currentVelocityVector, this.position, this.position.clone().add(this.velocity), this.velocity.length());
-    setVectorVisualisation(this._desiredVelocityVector, this.position, this.position.clone().add(this.desiredVelocity), this.desiredVelocity.length());
-    setVectorVisualisation(this._steeringVector, this.position.clone().add(this.velocity), this.position.clone().add(this.desiredVelocity), this.steering.length() * 100);
+    this._visualize(this.position, this.velocity, this.desiredVelocity, this.steering);
   }
 
   reset() {
     this.x = this._startPosition.x;
     this.y = this._startPosition.y;
     this.velocity = new Victor(100, 0);
+  }
+
+  _visualize(position, velocity, desiredVelocity, steering) {
+    setVectorVisualisation(this._currentVelocityVector, position, position.clone().add(velocity), velocity.length());
+    setVectorVisualisation(this._desiredVelocityVector, position, position.clone().add(desiredVelocity), desiredVelocity.length());
+    setVectorVisualisation(this._steeringVector, position.clone().add(velocity), position.clone().add(desiredVelocity), this.steering.length() * 100);
   }
   
   _getFraction(timestamp) {
