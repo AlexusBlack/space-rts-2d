@@ -25,6 +25,7 @@ export default class AiAgent {
     
     this._object = shape;
     this._lastTimestamp = null;
+    this._startPosition = new Victor(x, y);
   }
   
   get x() { return this._object.x; };
@@ -67,8 +68,8 @@ export default class AiAgent {
   }
 
   reset() {
-    this.x = 0;
-    this.y = 100;
+    this.x = this._startPosition.x;
+    this.y = this._startPosition.y;
     this.velocity = new Victor(100, 0);
   }
   

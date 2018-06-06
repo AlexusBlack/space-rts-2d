@@ -24,3 +24,9 @@ export function setVectorVisualisation(vector, source, target, length) {
   const angle = target.clone().subtract(source).angleDeg();
   vector.rotation = angle;
 }
+
+export function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min)) + min; //The maximum is exclusive and the minimum is inclusive
+}
