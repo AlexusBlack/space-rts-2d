@@ -55,13 +55,6 @@ export default class AiAgent {
     this.y += this.velocity.y * fraction;
     this._object.rotation = this.velocity.angleDeg();
     
-    if(this.x > 640) this.x = 0;
-    if(this.x < 0) this.x = 640;
-    if(this.y > 480) this.y = 0;
-    if(this.y < 0) this.y = 480;
-    
-    if(this.x > 395 && this.x < 405 && this.y > 395 && this.y < 405) this.reset();
-    
     setVectorVisualisation(this._currentVelocityVector, this.position, this.position.clone().add(this.velocity), this.velocity.length());
     setVectorVisualisation(this._desiredVelocityVector, this.position, this.position.clone().add(this.desiredVelocity), this.desiredVelocity.length());
     setVectorVisualisation(this._steeringVector, this.position.clone().add(this.velocity), this.position.clone().add(this.desiredVelocity), this.steering.length() * 100);
